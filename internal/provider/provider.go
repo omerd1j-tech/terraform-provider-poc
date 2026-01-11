@@ -7,7 +7,6 @@ import (
 	"context"
 	"net/http"
 	"os"
-	"io"
 
 	"github.com/hashicorp/terraform-plugin-framework/action"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
