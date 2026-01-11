@@ -1,1 +1,1 @@
-terraform import scaffolding_example.test "id-123"
+terraform import poc_example.test "id-123"
